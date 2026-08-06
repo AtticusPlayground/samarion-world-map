@@ -21,6 +21,15 @@
     .panel label { display: flex; gap: 6px; align-items: center; cursor: pointer; padding: 2px 0; }
     .panel .hint { color: #a08060; font-size: 12px; margin: 6px 0 0; }
     .panel a { color: #f0c090; }
+    .panel button {
+      background: #211616; border: 1px solid #6d2424; border-radius: 6px; color: #e0d0b0;
+      cursor: pointer; font-family: Georgia, serif; font-weight: bold; padding: 4px 8px; font-size: 12px;
+    }
+    .panel button:hover { border-color: #c41e3a; color: #f0d090; }
+    .panel input[type="text"], .panel select {
+      background: #0f0f0f; border: 1px solid #5c3a3a; border-radius: 4px; color: #e0d0b0;
+      font-family: Georgia, serif; padding: 4px 6px; font-size: 12px; box-sizing: border-box;
+    }
     .maplibregl-popup-content {
       background: #171310; color: #e0d0b0; border: 1px solid #8b0000; border-radius: 8px;
       font-family: Georgia, serif; max-width: 280px;
@@ -40,6 +49,23 @@
     <label><input type="checkbox" id="t-geo-labels" checked> Geographic labels</label>
     <label><input type="checkbox" id="t-canon-borders"> Canon borders (pre-divergence)</label>
     <p class="hint">Current era: 277 AR · <a href="https://samarioncodex.neocities.org/">Samarion Codex</a></p>
+    <div id="editor" hidden>
+      <h1 style="margin-top:10px;">Border Editor</h1>
+      <label><input type="radio" name="emode" value="borders" checked> Edit borders</label>
+      <label><input type="radio" name="emode" value="landmarks"> Move landmarks</label>
+      <label><input type="radio" name="emode" value="draw"> Draw new territory</label>
+      <div id="draw-fields" style="display:none; margin:4px 0;">
+        <input id="new-name" type="text" placeholder="Territory name" style="width:100%;margin:2px 0;">
+        <select id="new-owner" style="width:100%;margin:2px 0;"></select>
+      </div>
+      <div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px;">
+        <button id="btn-delete" type="button">Delete selected</button>
+        <button id="btn-export" type="button">Export</button>
+        <button id="btn-reset" type="button">Reset edits</button>
+      </div>
+      <p class="hint" id="edit-hint">Click a territory, then drag its points. Alt-click a point removes it; double-click the shape adds one. Edits save in this browser — Export and send the text back to bake them in for everyone.</p>
+      <textarea id="export-out" style="width:100%;height:110px;display:none;background:#0f0f0f;color:#e0d0b0;border:1px solid #5c3a3a;font-size:10px;"></textarea>
+    </div>
   </div>
 
   <script src="./vendor/pmtiles.js"></script>
@@ -51,6 +77,16 @@
 
     const protocol = new pmtiles.Protocol();
     maplibregl.addProtocol("pmtiles", protocol.tilev4);
+
+    // Campaign data: fetch the published files, then apply any edits saved
+    // in this browser (the ?edit=1 editor writes to localStorage).
+    const LS_B = "samarion-worldmap-borders-v1";
+    const LS_L = "samarion-worldmap-locations-v1";
+    async function fetchJson(u) { const r = await fetch(u); return r.json(); }
+    let bordersFC = await fetchJson(root + "campaign-borders.geojson");
+    let locationsFC = await fetchJson(root + "campaign-locations.geojson");
+    try { const s = localStorage.getItem(LS_B); if (s) bordersFC = JSON.parse(s); } catch (e) {}
+    try { const s = localStorage.getItem(LS_L); if (s) locationsFC = JSON.parse(s); } catch (e) {}
 
     // Time index pinned to the oldest canon slice; all politics newer than
     // that is replaced by the campaign layer anyway.
@@ -70,8 +106,9 @@
           url: "pmtiles://" + tilesUrl,
           encoding: "mlt"
         },
-        campaignBorders: { type: "geojson", data: root + "campaign-borders.geojson" },
-        campaignLocations: { type: "geojson", data: root + "campaign-locations.geojson" }
+        campaignBorders: { type: "geojson", data: bordersFC },
+        campaignLocations: { type: "geojson", data: locationsFC },
+        editHandles: { type: "geojson", data: { type: "FeatureCollection", features: [] } }
       },
       sprite: root + "sprites/sprites",
       glyphs: root + "fonts/{fontstack}/{range}.pbf",
@@ -154,7 +191,10 @@
           filter: ["==", ["get", "kind"], "nation-empire"],
           layout: { "text-field": ["get", "name"], "text-font": ["NotoSans-Medium"],
             "text-size": ["interpolate", ["linear"], ["zoom"], 4, 14, 5, 26] },
-          paint: { "text-color": "#ffffff", "text-halo-color": "rgb(74,0,0)", "text-halo-width": 2 } }
+          paint: { "text-color": "#ffffff", "text-halo-color": "rgb(74,0,0)", "text-halo-width": 2 } },
+        { id: "edit-handles", type: "circle", source: "editHandles",
+          paint: { "circle-radius": 6, "circle-color": "#fff2bf",
+            "circle-stroke-color": "#4a0000", "circle-stroke-width": 2 } }
       ]
     };
 
@@ -167,10 +207,14 @@
     });
     map.addControl(new maplibregl.NavigationControl(), "top-left");
     map.addControl(new maplibregl.ScaleControl({ unit: "imperial" }));
+    window.__map = map; // for tooling/tests
 
-    // Popups for campaign features.
+    const editMode = new URLSearchParams(location.search).get("edit") === "1";
+
+    // Popups for campaign features (viewing mode only).
     for (const layerId of ["campaign-capitals", "campaign-sanctuaries", "campaign-nation-labels"]) {
       map.on("click", layerId, e => {
+        if (editMode) return;
         const p = e.features[0].properties;
         const link = p.loreUrl ? `<p><a href="${p.loreUrl}" target="_blank">Read in the Codex →</a></p>` : "";
         new maplibregl.Popup({ maxWidth: "300px" })
@@ -193,6 +237,163 @@
     for (const [box, layers] of Object.entries(toggles)) {
       document.getElementById(box).addEventListener("change", e => {
         for (const l of layers) map.setLayoutProperty(l, "visibility", e.target.checked ? "visible" : "none");
+      });
+    }
+
+    /* ---------------- Border editor (?edit=1) ---------------- */
+    const OWNER_COLORS = {
+      taldor: "#d4a84b", monster: "#7aa35a", osirion: "#c98f4a", kelesh: "#8a6ab8",
+      absalom: "#c41e3a", nex: "#4aa8a8", geb: "#8090a0", wastes: "#6a5a4a", independent: "#9a9a9a"
+    };
+    if (editMode) {
+      document.getElementById("editor").hidden = false;
+      const ownerSel = document.getElementById("new-owner");
+      ownerSel.innerHTML = Object.keys(OWNER_COLORS).map(o => `<option value="${o}">${o}</option>`).join("");
+      const hint = document.getElementById("edit-hint");
+      let selected = -1;
+      let mode = "borders";
+      let drawPts = [];
+      let drag = null;
+      let lmDrag = null;
+
+      const saveB = () => { localStorage.setItem(LS_B, JSON.stringify(bordersFC)); map.getSource("campaignBorders").setData(bordersFC); };
+      const saveL = () => { localStorage.setItem(LS_L, JSON.stringify(locationsFC)); map.getSource("campaignLocations").setData(locationsFC); };
+      const ring = i => bordersFC.features[i].geometry.coordinates[0];
+
+      function refreshHandles() {
+        const feats = [];
+        if (mode === "draw") {
+          drawPts.forEach((p, vi) => feats.push({ type: "Feature", properties: { v: vi }, geometry: { type: "Point", coordinates: p } }));
+        } else if (mode === "borders" && selected >= 0) {
+          const r = ring(selected);
+          for (let vi = 0; vi < r.length - 1; vi++) feats.push({ type: "Feature", properties: { v: vi }, geometry: { type: "Point", coordinates: r[vi] } });
+        }
+        map.getSource("editHandles").setData({ type: "FeatureCollection", features: feats });
+      }
+
+      document.querySelectorAll('input[name="emode"]').forEach(rb => rb.addEventListener("change", e => {
+        mode = e.target.value; selected = -1; drawPts = [];
+        document.getElementById("draw-fields").style.display = mode === "draw" ? "block" : "none";
+        hint.textContent = mode === "borders"
+          ? "Click a territory, then drag its points. Alt-click removes a point; double-click the shape adds one."
+          : mode === "landmarks"
+          ? "Drag any campaign marker or nation label to move it."
+          : "Type a name, pick an owner, then click the map to place points. Double-click to finish the shape.";
+        refreshHandles();
+      }));
+
+      map.on("click", "campaign-borders-fill", e => {
+        if (mode !== "borders") return;
+        const id = e.features[0].properties.id;
+        selected = bordersFC.features.findIndex(f => f.properties.id === id);
+        hint.textContent = "Editing: " + e.features[0].properties.name + " — drag points; Alt-click removes; double-click adds.";
+        refreshHandles();
+      });
+
+      map.on("mousedown", "edit-handles", e => {
+        if (mode === "draw") return;
+        e.preventDefault();
+        const v = e.features[0].properties.v;
+        if (e.originalEvent.altKey && mode === "borders" && selected >= 0) {
+          const r = ring(selected);
+          if (r.length - 1 > 3) {
+            r.splice(v, 1);
+            r[r.length - 1] = [...r[0]];
+            saveB(); refreshHandles();
+          }
+          return;
+        }
+        drag = { v };
+        map.dragPan.disable();
+      });
+
+      map.on("mousemove", e => {
+        if (drag != null && selected >= 0) {
+          const r = ring(selected);
+          r[drag.v] = [e.lngLat.lng, e.lngLat.lat];
+          if (drag.v === 0) r[r.length - 1] = [e.lngLat.lng, e.lngLat.lat];
+          map.getSource("campaignBorders").setData(bordersFC);
+          refreshHandles();
+        }
+        if (lmDrag != null && lmDrag >= 0) {
+          locationsFC.features[lmDrag].geometry.coordinates = [e.lngLat.lng, e.lngLat.lat];
+          map.getSource("campaignLocations").setData(locationsFC);
+        }
+      });
+
+      map.on("mouseup", () => {
+        if (drag != null) saveB();
+        if (lmDrag != null) saveL();
+        drag = null; lmDrag = null;
+        map.dragPan.enable();
+      });
+
+      map.doubleClickZoom.disable();
+      map.on("dblclick", e => {
+        if (mode === "draw") { e.preventDefault(); finishDraw(); return; }
+        if (mode !== "borders" || selected < 0) return;
+        e.preventDefault();
+        const r = ring(selected);
+        let best = 0, bestD = Infinity;
+        for (let i = 0; i < r.length - 1; i++) {
+          const mx = (r[i][0] + r[i + 1][0]) / 2, my = (r[i][1] + r[i + 1][1]) / 2;
+          const d = (mx - e.lngLat.lng) * (mx - e.lngLat.lng) + (my - e.lngLat.lat) * (my - e.lngLat.lat);
+          if (d < bestD) { bestD = d; best = i; }
+        }
+        r.splice(best + 1, 0, [e.lngLat.lng, e.lngLat.lat]);
+        saveB(); refreshHandles();
+      });
+
+      for (const lyr of ["campaign-capitals", "campaign-sanctuaries", "campaign-nation-labels"]) {
+        map.on("mousedown", lyr, e => {
+          if (mode !== "landmarks") return;
+          e.preventDefault();
+          const id = e.features[0].properties.id;
+          lmDrag = locationsFC.features.findIndex(f => f.properties.id === id);
+          map.dragPan.disable();
+        });
+      }
+
+      map.on("click", e => {
+        if (mode !== "draw") return;
+        drawPts.push([e.lngLat.lng, e.lngLat.lat]);
+        refreshHandles();
+      });
+
+      function finishDraw() {
+        if (drawPts.length < 3) return;
+        const name = document.getElementById("new-name").value.trim() || "New Territory";
+        const owner = ownerSel.value;
+        const id = (name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")) || ("territory-" + drawPts.length);
+        bordersFC.features.push({
+          type: "Feature",
+          properties: { id, name, owner, color: OWNER_COLORS[owner] || "#999999" },
+          geometry: { type: "Polygon", coordinates: [[...drawPts, [...drawPts[0]]]] }
+        });
+        drawPts = [];
+        saveB(); refreshHandles();
+        hint.textContent = "Added " + name + ". Switch to Edit borders to refine it.";
+      }
+
+      document.getElementById("btn-delete").addEventListener("click", () => {
+        if (mode === "borders" && selected >= 0) {
+          bordersFC.features.splice(selected, 1);
+          selected = -1;
+          saveB(); refreshHandles();
+        }
+      });
+      document.getElementById("btn-export").addEventListener("click", () => {
+        const out = document.getElementById("export-out");
+        out.style.display = "block";
+        out.value = "=== campaign-borders.geojson ===\n" + JSON.stringify(bordersFC, null, 1) +
+          "\n\n=== campaign-locations.geojson ===\n" + JSON.stringify(locationsFC, null, 1);
+        out.focus(); out.select();
+        try { navigator.clipboard.writeText(out.value); } catch (err) {}
+      });
+      document.getElementById("btn-reset").addEventListener("click", () => {
+        localStorage.removeItem(LS_B);
+        localStorage.removeItem(LS_L);
+        location.reload();
       });
     }
   </script>
