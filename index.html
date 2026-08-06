@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Samarion Codex — World Map</title>
+  <meta name="description" content="Interactive world map for the Samarion Codex Pathfinder campaign — pf-wikis Golarion cartography with campaign-era borders, nations, and landmarks.">
+  <link rel="stylesheet" href="./vendor/maplibre-gl.css">
+  <style>
+    html, body { margin: 0; height: 100%; background: #0a0a0a; font-family: Georgia, serif; }
+    #map { position: absolute; inset: 0; }
+    .panel {
+      position: absolute; top: 10px; right: 10px; z-index: 5;
+      background: rgba(17, 17, 17, 0.92); border: 2px solid #5c1a1a; border-radius: 10px;
+      color: #e0d0b0; padding: 10px 12px; max-width: 240px; font-size: 14px;
+    }
+    .panel h1 {
+      margin: 0 0 6px; font-size: 16px; color: #c41e3a; font-weight: bold;
+      border-bottom: 1px solid #5c1a1a; padding-bottom: 4px;
+    }
+    .panel label { display: flex; gap: 6px; align-items: center; cursor: pointer; padding: 2px 0; }
+    .panel .hint { color: #a08060; font-size: 12px; margin: 6px 0 0; }
+    .panel a { color: #f0c090; }
+    .maplibregl-popup-content {
+      background: #171310; color: #e0d0b0; border: 1px solid #8b0000; border-radius: 8px;
+      font-family: Georgia, serif; max-width: 280px;
+    }
+    .maplibregl-popup-content h3 { margin: 0 0 4px; color: #f0d090; }
+    .maplibregl-popup-content a { color: #c41e3a; font-weight: bold; }
+    .maplibregl-popup-tip { border-top-color: #8b0000 !important; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div class="panel">
+    <h1>Samarion World Map</h1>
+    <label><input type="checkbox" id="t-campaign-borders" checked> Campaign borders</label>
+    <label><input type="checkbox" id="t-campaign-marks" checked> Campaign landmarks</label>
+    <label><input type="checkbox" id="t-cities" checked> Cities &amp; sites (canon)</label>
+    <label><input type="checkbox" id="t-geo-labels" checked> Geographic labels</label>
+    <label><input type="checkbox" id="t-canon-borders"> Canon borders (pre-divergence)</label>
+    <p class="hint">Current era: 277 AR · <a href="https://samarioncodex.neocities.org/">Samarion Codex</a></p>
+  </div>
+
+  <script src="./vendor/pmtiles.js"></script>
+  <script type="module">
+    import * as maplibregl from "./vendor/maplibre-gl.mjs";
+    const root = location.origin + location.pathname.replace(/[^/]*$/, "");
+    maplibregl.setWorkerUrl(root + "vendor/maplibre-gl-worker.mjs");
+    const tilesUrl = new URLSearchParams(location.search).get("tiles") || (root + "golarion-innersea.pmtiles");
+
+    const protocol = new pmtiles.Protocol();
+    maplibregl.addProtocol("pmtiles", protocol.tilev4);
+
+    // Time index pinned to the oldest canon slice; all politics newer than
+    // that is replaced by the campaign layer anyway.
+    const TIME = -16;
+    const tFilter = ["all",
+      ["any", ["!", ["has", "timeIndexStart"]], [">=", TIME, ["get", "timeIndexStart"]]],
+      ["any", ["!", ["has", "timeIndexEnd"]], ["<", TIME, ["get", "timeIndexEnd"]]]];
+
+    const style = {
+      version: 8,
+      center: [-1, 29],
+      zoom: 4.2,
+      sources: {
+        golarion: {
+          type: "vector",
+          attribution: '<a href="https://paizo.com/licenses/communityuse">Paizo CUP</a> · <a href="https://github.com/pf-wikis/mapping#acknowledgments">pf-wikis mapping</a> · <a href="https://samarioncodex.neocities.org/">Samarion Codex</a>',
+          url: "pmtiles://" + tilesUrl,
+          encoding: "mlt"
+        },
+        campaignBorders: { type: "geojson", data: root + "campaign-borders.geojson" },
+        campaignLocations: { type: "geojson", data: root + "campaign-locations.geojson" }
+      },
+      sprite: root + "sprites/sprites",
+      glyphs: root + "fonts/{fontstack}/{range}.pbf",
+      layers: [
+        { id: "background", type: "background", paint: { "background-color": "rgb(110,160,245)" } },
+        { id: "fill_geometry", type: "fill", source: "golarion", "source-layer": "geometry",
+          paint: { "fill-color": ["get", "color"], "fill-antialias": false } },
+        { id: "borders-nations", type: "line", source: "golarion", "source-layer": "borders",
+          filter: ["all", ["==", ["get", "borderType"], 3], ...tFilter.slice(1)],
+          layout: { visibility: "none", "line-cap": "round" },
+          paint: { "line-color": "rgb(170,170,170)",
+            "line-width": ["interpolate", ["exponential", 2], ["zoom"], 3, 0.375, 5, 2] } },
+        { id: "borders-subregions", type: "line", source: "golarion", "source-layer": "borders",
+          filter: ["all", ["==", ["get", "borderType"], 2], ...tFilter.slice(1)],
+          layout: { visibility: "none", "line-cap": "round" },
+          paint: { "line-color": "rgb(170,170,170)",
+            "line-width": ["interpolate", ["exponential", 2], ["zoom"], 0, 0.375, 3, 2] } },
+        { id: "borders-provinces", type: "line", source: "golarion", "source-layer": "borders",
+          filter: ["all", ["==", ["get", "borderType"], 4], ...tFilter.slice(1)], minzoom: 4,
+          layout: { visibility: "none", "line-cap": "round" },
+          paint: { "line-color": "rgb(170,170,170)", "line-dasharray": [5, 10],
+            "line-opacity": ["interpolate", ["exponential", 2], ["zoom"], 4, 0, 6, 1] } },
+        { id: "line_line-labels", type: "symbol", source: "golarion", "source-layer": "line-labels",
+          filter: tFilter,
+          layout: { "symbol-placement": "line", "text-max-angle": 20,
+            "text-field": ["get", "label"], "text-font": ["NotoSans-Medium"], "symbol-spacing": 300,
+            "text-size": ["interpolate", ["linear"], ["zoom"], 5, 2, 10, 16] },
+          paint: { "text-color": ["get", "color"], "text-halo-color": ["get", "halo"],
+            "text-halo-width": ["interpolate", ["linear"], ["zoom"], 5, 0.125, 10, 1] } },
+        { id: "location-icons", type: "symbol", source: "golarion", "source-layer": "locations",
+          filter: tFilter,
+          layout: { "icon-image": ["get", "icon"], "icon-pitch-alignment": "map",
+            "icon-overlap": "always", "icon-ignore-placement": true,
+            "icon-size": ["interpolate", ["exponential", 2], ["zoom"],
+              0, ["^", 2, ["-", -2, ["get", "pregroupMinzoom"]]],
+              1, ["^", 2, ["-", -1, ["get", "pregroupMinzoom"]]],
+              2, ["min", 1, ["^", 2, ["-", 0, ["get", "pregroupMinzoom"]]]],
+              3, ["min", 1, ["^", 2, ["-", 1, ["get", "pregroupMinzoom"]]]],
+              4, ["min", 1, ["^", 2, ["-", 2, ["get", "pregroupMinzoom"]]]],
+              5, ["min", 1, ["^", 2, ["-", 3, ["get", "pregroupMinzoom"]]]],
+              6, ["min", 1, ["^", 2, ["-", 4, ["get", "pregroupMinzoom"]]]],
+              7, ["min", 1, ["^", 2, ["-", 5, ["get", "pregroupMinzoom"]]]],
+              8, ["min", 1, ["^", 2, ["-", 6, ["get", "pregroupMinzoom"]]]],
+              9, ["min", 1, ["^", 2, ["-", 7, ["get", "pregroupMinzoom"]]]],
+              10, ["min", 1, ["^", 2, ["-", 8, ["get", "pregroupMinzoom"]]]]] } },
+        { id: "text_labels", type: "symbol", source: "golarion", "source-layer": "labels",
+          filter: tFilter,
+          layout: { "text-field": ["get", "label"], "text-rotate": ["get", "angle"],
+            "text-rotation-alignment": "map", "text-font": ["NotoSans-Medium"],
+            "text-size": 16, "text-overlap": "always" },
+          paint: { "text-color": ["get", "color"], "text-halo-color": ["get", "halo"], "text-halo-width": 1.5 } },
+        { id: "location-labels", type: "symbol", source: "golarion", "source-layer": "locations",
+          filter: ["all", ["has", "label"], [">=", ["zoom"], ["+", ["get", "pregroupMinzoom"], 5]], ...tFilter.slice(1)],
+          layout: { "text-field": ["get", "label"], "text-font": ["NotoSans-Medium"], "text-size": 14,
+            "text-variable-anchor": ["left", "right"], "text-radial-offset": 0.5 },
+          paint: { "text-color": "rgb(255,255,255)", "text-halo-color": "rgb(10,10,10)", "text-halo-width": 0.8 } },
+        { id: "region-labels", type: "symbol", source: "golarion", "source-layer": "region-labels",
+          filter: tFilter,
+          layout: { "text-field": ["get", "label"], "text-font": ["NotoSans-Medium"], "text-size": 20,
+            "text-variable-anchor": ["center", "top", "bottom"], "symbol-z-order": "source" },
+          paint: { "text-color": "rgb(17,42,97)", "text-halo-color": "rgb(213,195,138)", "text-halo-width": 1.5 } },
+        // ---- Campaign layer: the Samarion timeline's world, 277 AR ----
+        { id: "campaign-borders-fill", type: "fill", source: "campaignBorders",
+          paint: { "fill-color": ["get", "color"], "fill-opacity": 0.18 } },
+        { id: "campaign-borders-line", type: "line", source: "campaignBorders",
+          layout: { "line-cap": "round", "line-join": "round" },
+          paint: { "line-color": ["get", "color"], "line-width": 2, "line-opacity": 0.9 } },
+        { id: "campaign-capitals", type: "circle", source: "campaignLocations",
+          filter: ["==", ["get", "kind"], "capital"],
+          paint: { "circle-radius": 5, "circle-color": "#f0d090", "circle-stroke-color": "#4a0000", "circle-stroke-width": 2 } },
+        { id: "campaign-sanctuaries", type: "circle", source: "campaignLocations",
+          filter: ["==", ["get", "kind"], "sanctuary"],
+          paint: { "circle-radius": 5, "circle-color": "#8db06d", "circle-stroke-color": "#1a2a10", "circle-stroke-width": 2 } },
+        { id: "campaign-capital-labels", type: "symbol", source: "campaignLocations",
+          filter: ["!=", ["get", "kind"], "nation-empire"], minzoom: 4.5,
+          layout: { "text-field": ["get", "name"], "text-font": ["NotoSans-Medium"], "text-size": 13,
+            "text-variable-anchor": ["left", "right"], "text-radial-offset": 0.6 },
+          paint: { "text-color": "#f0d090", "text-halo-color": "#1a0808", "text-halo-width": 1.2 } },
+        { id: "campaign-nation-labels", type: "symbol", source: "campaignLocations",
+          filter: ["==", ["get", "kind"], "nation-empire"],
+          layout: { "text-field": ["get", "name"], "text-font": ["NotoSans-Medium"],
+            "text-size": ["interpolate", ["linear"], ["zoom"], 4, 14, 5, 26] },
+          paint: { "text-color": "#ffffff", "text-halo-color": "rgb(74,0,0)", "text-halo-width": 2 } }
+      ]
+    };
+
+    const map = new maplibregl.Map({
+      container: "map",
+      hash: "location",
+      style: style,
+      attributionControl: { compact: true },
+      pixelRatio: Math.max(window.devicePixelRatio || 1, 2)
+    });
+    map.addControl(new maplibregl.NavigationControl(), "top-left");
+    map.addControl(new maplibregl.ScaleControl({ unit: "imperial" }));
+
+    // Popups for campaign features.
+    for (const layerId of ["campaign-capitals", "campaign-sanctuaries", "campaign-nation-labels"]) {
+      map.on("click", layerId, e => {
+        const p = e.features[0].properties;
+        const link = p.loreUrl ? `<p><a href="${p.loreUrl}" target="_blank">Read in the Codex →</a></p>` : "";
+        new maplibregl.Popup({ maxWidth: "300px" })
+          .setLngLat(e.lngLat)
+          .setHTML(`<h3>${p.name}</h3><p>${(p.text || "").slice(0, 300)}${(p.text || "").length > 300 ? "…" : ""}</p>${link}`)
+          .addTo(map);
+      });
+      map.on("mouseenter", layerId, () => { map.getCanvas().style.cursor = "pointer"; });
+      map.on("mouseleave", layerId, () => { map.getCanvas().style.cursor = ""; });
+    }
+
+    // Toggle panel wiring.
+    const toggles = {
+      "t-campaign-borders": ["campaign-borders-fill", "campaign-borders-line"],
+      "t-campaign-marks": ["campaign-capitals", "campaign-sanctuaries", "campaign-capital-labels", "campaign-nation-labels"],
+      "t-cities": ["location-icons", "location-labels"],
+      "t-geo-labels": ["text_labels", "region-labels", "line_line-labels"],
+      "t-canon-borders": ["borders-nations", "borders-subregions", "borders-provinces"]
+    };
+    for (const [box, layers] of Object.entries(toggles)) {
+      document.getElementById(box).addEventListener("change", e => {
+        for (const l of layers) map.setLayoutProperty(l, "visibility", e.target.checked ? "visible" : "none");
+      });
+    }
+  </script>
+</body>
+</html>

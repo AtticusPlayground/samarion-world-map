@@ -1,0 +1,22 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {"type":"Feature","properties":{"id":"taldor","name":"Taldor","owner":"taldor","color":"#d4a84b"},"geometry":{"type":"Polygon","coordinates":[[[1.8,35.2],[6.5,36.2],[11.5,35.6],[14.5,33.0],[13.5,30.0],[9.0,28.8],[5.0,29.4],[2.6,30.8],[1.2,33.0],[1.8,35.2]]]}},
+  {"type":"Feature","properties":{"id":"marches","name":"The Taldan–Monster Marches","owner":"taldor","color":"#d4a84b"},"geometry":{"type":"Polygon","coordinates":[[[0.4,35.0],[1.8,35.2],[1.2,33.0],[2.6,30.8],[1.4,30.9],[0.0,33.0],[0.4,35.0]]]}},
+  {"type":"Feature","properties":{"id":"monster","name":"Monster","owner":"monster","color":"#7aa35a"},"geometry":{"type":"Polygon","coordinates":[[[-9.5,34.6],[-4.5,35.6],[-0.8,34.8],[0.4,35.0],[0.0,33.0],[1.4,30.9],[-2.5,31.3],[-6.5,31.8],[-9.5,32.8],[-9.5,34.6]]]}},
+  {"type":"Feature","properties":{"id":"galt","name":"Galt","owner":"taldor","color":"#d4a84b"},"geometry":{"type":"Polygon","coordinates":[[[2.0,39.8],[6.8,40.0],[8.2,38.0],[6.5,36.2],[1.8,35.2],[1.0,37.5],[2.0,39.8]]]}},
+  {"type":"Feature","properties":{"id":"qadira","name":"Qadira","owner":"kelesh","color":"#8a6ab8"},"geometry":{"type":"Polygon","coordinates":[[[6.8,29.2],[12.0,29.6],[16.5,28.0],[15.0,25.2],[9.5,25.4],[6.2,27.0],[6.8,29.2]]]}},
+  {"type":"Feature","properties":{"id":"kelesh-heartland","name":"Kelesh (western satrapies)","owner":"kelesh","color":"#8a6ab8"},"geometry":{"type":"Polygon","coordinates":[[[16.5,28.0],[19.8,27.4],[19.8,22.0],[15.8,22.6],[15.0,25.2],[16.5,28.0]]]}},
+  {"type":"Feature","properties":{"id":"kelesh-coast","name":"The Kelesh Coast opposite Sothis","owner":"osirion","color":"#c98f4a"},"geometry":{"type":"Polygon","coordinates":[[[8.5,24.4],[15.0,23.6],[14.0,20.6],[9.0,21.2],[8.5,24.4]]]}},
+  {"type":"Feature","properties":{"id":"kortos","name":"Isle of Kortos","owner":"absalom","color":"#c41e3a"},"geometry":{"type":"Polygon","coordinates":[[[-1.9,31.15],[-0.7,31.55],[0.85,31.25],[1.05,30.6],[-0.3,30.25],[-1.5,30.5],[-1.9,31.15]]]}},
+  {"type":"Feature","properties":{"id":"upper-osirion","name":"Upper Osirion","owner":"osirion","color":"#c98f4a"},"geometry":{"type":"Polygon","coordinates":[[[-3.2,28.4],[1.0,28.7],[3.2,27.6],[2.6,26.0],[-1.0,26.1],[-3.2,26.9],[-3.2,28.4]]]}},
+  {"type":"Feature","properties":{"id":"osirion-core","name":"Osirion (Sothis)","owner":"osirion","color":"#c98f4a"},"geometry":{"type":"Polygon","coordinates":[[[-3.2,26.9],[-1.0,26.1],[2.6,26.0],[3.6,23.6],[0.2,22.0],[-3.6,22.6],[-4.2,24.6],[-3.2,26.9]]]}},
+  {"type":"Feature","properties":{"id":"thuvia","name":"Thuvia","owner":"osirion","color":"#c98f4a"},"geometry":{"type":"Polygon","coordinates":[[[-13.2,28.2],[-4.4,28.6],[-3.2,26.9],[-4.2,24.6],[-9.2,25.0],[-13.2,26.0],[-13.2,28.2]]]}},
+  {"type":"Feature","properties":{"id":"rahadoum","name":"Rahadoum","owner":"osirion","color":"#c98f4a"},"geometry":{"type":"Polygon","coordinates":[[[-24.0,30.4],[-19.0,31.8],[-14.0,30.8],[-13.2,28.2],[-16.4,26.6],[-21.4,27.0],[-24.0,28.2],[-24.0,30.4]]]}},
+  {"type":"Feature","properties":{"id":"katapesh","name":"Katapesh","owner":"osirion","color":"#c98f4a"},"geometry":{"type":"Polygon","coordinates":[[[-4.0,22.5],[0.2,22.0],[2.2,20.6],[0.6,18.7],[-3.0,18.9],[-5.2,20.6],[-4.0,22.5]]]}},
+  {"type":"Feature","properties":{"id":"nex","name":"Nex","owner":"nex","color":"#4aa8a8"},"geometry":{"type":"Polygon","coordinates":[[[-5.2,20.6],[-3.0,18.9],[0.6,18.7],[0.0,17.1],[-3.6,16.9],[-5.6,18.6],[-5.2,20.6]]]}},
+  {"type":"Feature","properties":{"id":"jalmeray","name":"Jalmeray","owner":"nex","color":"#4aa8a8"},"geometry":{"type":"Polygon","coordinates":[[[2.6,19.15],[3.9,19.05],[4.05,18.5],[2.95,18.3],[2.6,19.15]]]}},
+  {"type":"Feature","properties":{"id":"mana-wastes","name":"Mana Wastes","owner":"wastes","color":"#6a5a4a"},"geometry":{"type":"Polygon","coordinates":[[[-6.6,17.1],[-3.6,16.9],[-3.1,15.9],[-5.1,15.3],[-7.1,15.9],[-6.6,17.1]]]}},
+  {"type":"Feature","properties":{"id":"geb","name":"Geb","owner":"geb","color":"#8090a0"},"geometry":{"type":"Polygon","coordinates":[[[-5.1,15.3],[-3.1,15.9],[-2.2,14.7],[-3.1,12.9],[-5.6,13.1],[-6.1,14.3],[-5.1,15.3]]]}}
+ ]
+}
