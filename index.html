@@ -115,6 +115,11 @@
       layers: [
         { id: "background", type: "background", paint: { "background-color": "rgb(110,160,245)" } },
         { id: "fill_geometry", type: "fill", source: "golarion", "source-layer": "geometry",
+          // The Eye of Abendego formed at Aroden's death (4606 AR) — an event
+          // that never happens in this world. Its hurricane clouds are the only
+          // features drawn in #f0f0f0, so filtering that color erases the storm
+          // and restores the calm Abendego Gulf beneath it.
+          filter: ["!=", ["get", "color"], "#f0f0f0"],
           paint: { "fill-color": ["get", "color"], "fill-antialias": false } },
         { id: "borders-nations", type: "line", source: "golarion", "source-layer": "borders",
           filter: ["all", ["==", ["get", "borderType"], 3], ...tFilter.slice(1)],
@@ -155,7 +160,7 @@
               9, ["min", 1, ["^", 2, ["-", 7, ["get", "pregroupMinzoom"]]]],
               10, ["min", 1, ["^", 2, ["-", 8, ["get", "pregroupMinzoom"]]]]] } },
         { id: "text_labels", type: "symbol", source: "golarion", "source-layer": "labels",
-          filter: tFilter,
+          filter: ["all", ...tFilter.slice(1), ["!", ["in", ["get", "label"], ["literal", ["Eye of Abendego", "Sodden Lands"]]]]],
           layout: { "text-field": ["get", "label"], "text-rotate": ["get", "angle"],
             "text-rotation-alignment": "map", "text-font": ["NotoSans-Medium"],
             "text-size": 16, "text-overlap": "always" },
@@ -166,7 +171,7 @@
             "text-variable-anchor": ["left", "right"], "text-radial-offset": 0.5 },
           paint: { "text-color": "rgb(255,255,255)", "text-halo-color": "rgb(10,10,10)", "text-halo-width": 0.8 } },
         { id: "region-labels", type: "symbol", source: "golarion", "source-layer": "region-labels",
-          filter: tFilter,
+          filter: ["all", ...tFilter.slice(1), ["!", ["in", ["get", "label"], ["literal", ["Eye of Abendego", "Sodden Lands"]]]]],
           layout: { "text-field": ["get", "label"], "text-font": ["NotoSans-Medium"], "text-size": 20,
             "text-variable-anchor": ["center", "top", "bottom"], "symbol-z-order": "source" },
           paint: { "text-color": "rgb(17,42,97)", "text-halo-color": "rgb(213,195,138)", "text-halo-width": 1.5 } },
@@ -182,8 +187,12 @@
         { id: "campaign-sanctuaries", type: "circle", source: "campaignLocations",
           filter: ["==", ["get", "kind"], "sanctuary"],
           paint: { "circle-radius": 5, "circle-color": "#8db06d", "circle-stroke-color": "#1a2a10", "circle-stroke-width": 2 } },
+        { id: "campaign-sea-labels", type: "symbol", source: "campaignLocations",
+          filter: ["==", ["get", "kind"], "sea-label"],
+          layout: { "text-field": ["get", "name"], "text-font": ["NotoSans-Medium"], "text-size": 18, "text-letter-spacing": 0.15 },
+          paint: { "text-color": "rgb(17,42,97)", "text-halo-color": "rgb(213,195,138)", "text-halo-width": 1.4 } },
         { id: "campaign-capital-labels", type: "symbol", source: "campaignLocations",
-          filter: ["!=", ["get", "kind"], "nation-empire"], minzoom: 4.5,
+          filter: ["in", ["get", "kind"], ["literal", ["capital", "sanctuary"]]], minzoom: 4.5,
           layout: { "text-field": ["get", "name"], "text-font": ["NotoSans-Medium"], "text-size": 13,
             "text-variable-anchor": ["left", "right"], "text-radial-offset": 0.6 },
           paint: { "text-color": "#f0d090", "text-halo-color": "#1a0808", "text-halo-width": 1.2 } },

@@ -288,6 +288,24 @@
      14.761
     ]
    }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "abendego-gulf",
+    "name": "ABENDEGO GULF",
+    "kind": "sea-label",
+    "text": "The calm gulf off western Garund. In published history, a permanent hurricane \u2014 the Eye of Abendego \u2014 forms here in 4606 AR at the moment of Aroden's death, drowning the coastal nations. In this world Aroden lives, and the gulf is just a gulf.",
+    "loreUrl": "",
+    "tags": "Sea, Restored Geography"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -26.0,
+     21.5
+    ]
+   }
   }
  ]
 }
