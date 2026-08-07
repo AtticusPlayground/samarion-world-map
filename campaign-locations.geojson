@@ -313,9 +313,9 @@
     "id": "lirgen",
     "name": "Lirgen",
     "kind": "nation-empire",
-    "text": "Young realm of the Saoc Brethren \u2014 astrologer-priests who chart every fate in the stars. In published history, Lirgen drowns beneath the Eye of Abendego at Aroden's death, a storm its stargazers never foresaw. In this world the stars stay kind.",
-    "loreUrl": "",
-    "tags": "Saoc Brethren, Astrologers, Abendego Coast"
+    "text": "Realm of the Saoc Brethren, astrologer-priests who chart every fate in the stars \u2014 they read the arrival of Grub's expedition eleven years before it sailed. Bound to Osirion in friendship by the Abendego Accord (171 AR). In published history Lirgen drowns beneath the Eye of Abendego; in this world the stars stay kind.",
+    "loreUrl": "https://samarioncodex.neocities.org/lirgen-yamasa.html",
+    "tags": "Saoc Brethren, Astrologers, Abendego Accord"
    },
    "geometry": {
     "type": "Point",
@@ -331,8 +331,8 @@
     "id": "hyrantam",
     "name": "Hyrantam",
     "kind": "capital",
-    "text": "Capital of Lirgen and seat of the Saoc Brethren's star-courts, where the year's fates are read aloud from the observatory terraces.",
-    "loreUrl": "",
+    "text": "Capital of Lirgen and seat of the Saoc Brethren's star-courts. Its wharf-masters logged the names of Grub's expedition before the Kind Wager ever made harbor, and each year its astrologers still send the dead Pharaoh's horoscope to Sothis \u2014 sealed, and never opened.",
+    "loreUrl": "https://samarioncodex.neocities.org/lirgen-yamasa.html",
     "tags": "Capital, Lirgen"
    },
    "geometry": {
@@ -349,9 +349,9 @@
     "id": "yamasa",
     "name": "Yamasa",
     "kind": "nation-empire",
-    "text": "Clan-held river country south of Lirgen, ruled by its matriarchs and rich in wetland harvests. Published history drowns it with the Eye of Abendego; here its rivers run their own course.",
-    "loreUrl": "",
-    "tags": "Matriarchal Clans, Abendego Coast"
+    "text": "Clan-held river country ruled by its matriarchs, whose wetland harvests feed half the western gulf \u2014 and, since the Abendego Accord (171 AR), Osirion's markets too. Grub called them the only people he ever met who haggled properly. Published history drowns Yamasa; here its rivers run their own course.",
+    "loreUrl": "https://samarioncodex.neocities.org/lirgen-yamasa.html",
+    "tags": "Matriarchal Clans, Abendego Accord, Trade"
    },
    "geometry": {
     "type": "Point",
@@ -367,8 +367,8 @@
     "id": "jula",
     "name": "Jula",
     "kind": "capital",
-    "text": "Greatest of Yamasa's river-towns and the customary meeting-seat of its clan matriarchs.",
-    "loreUrl": "",
+    "text": "Greatest of Yamasa's river-towns and meeting-seat of the clan matriarchs. Pharaoh Grub walked its flood-markets for a full day in near silence \u2014 his highest form of respect \u2014 before signing the Abendego Accord on its river-stones.",
+    "loreUrl": "https://samarioncodex.neocities.org/lirgen-yamasa.html",
     "tags": "Capital, Yamasa"
    },
    "geometry": {
