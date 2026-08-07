@@ -82,11 +82,17 @@
     // in this browser (the ?edit=1 editor writes to localStorage).
     const LS_B = "samarion-worldmap-borders-v1";
     const LS_L = "samarion-worldmap-locations-v1";
+    const EDIT = new URLSearchParams(location.search).get("edit") === "1";
     async function fetchJson(u) { const r = await fetch(u); return r.json(); }
-    let bordersFC = await fetchJson(root + "campaign-borders.geojson");
-    let locationsFC = await fetchJson(root + "campaign-locations.geojson");
-    try { const s = localStorage.getItem(LS_B); if (s) bordersFC = JSON.parse(s); } catch (e) {}
-    try { const s = localStorage.getItem(LS_L); if (s) locationsFC = JSON.parse(s); } catch (e) {}
+    // Cache-bust the data files so a publish shows up on refresh, and only let
+    // the editor's local draft shadow the published data inside ?edit=1 —
+    // viewers always see the published map.
+    let bordersFC = await fetchJson(root + "campaign-borders.geojson?v=" + Date.now());
+    let locationsFC = await fetchJson(root + "campaign-locations.geojson?v=" + Date.now());
+    if (EDIT) {
+      try { const s = localStorage.getItem(LS_B); if (s) bordersFC = JSON.parse(s); } catch (e) {}
+      try { const s = localStorage.getItem(LS_L); if (s) locationsFC = JSON.parse(s); } catch (e) {}
+    }
 
     // Time index pinned to the oldest canon slice; all politics newer than
     // that is replaced by the campaign layer anyway.
@@ -218,7 +224,7 @@
     map.addControl(new maplibregl.ScaleControl({ unit: "imperial" }));
     window.__map = map; // for tooling/tests
 
-    const editMode = new URLSearchParams(location.search).get("edit") === "1";
+    const editMode = EDIT;
 
     // Popups for campaign features (viewing mode only).
     for (const layerId of ["campaign-capitals", "campaign-sanctuaries", "campaign-nation-labels"]) {
