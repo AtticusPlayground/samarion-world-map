@@ -1,21 +1,293 @@
 {
  "type": "FeatureCollection",
  "features": [
-  {"type":"Feature","properties":{"id":"isle-of-kortos","name":"Isle of Kortos","kind":"nation-empire","text":"Island home of Absalom and the Starstone. The City at the Center of the World rules the isle; Aroden remains active in this era.","loreUrl":"https://samarioncodex.neocities.org/heroes-of-absalom.html","tags":"Absalom, Starstone, Current Timeline"},"geometry":{"type":"Point","coordinates":[0.5,30.6]}},
-  {"type":"Feature","properties":{"id":"absalom-capital","name":"Absalom","kind":"capital","text":"Ruling city of the Isle of Kortos and the City at the Center of the World. In this campaign era, Aroden is still active and tied directly into Absalom politics.","loreUrl":"https://samarioncodex.neocities.org/heroes-of-absalom.html","tags":"Capital, Isle of Kortos, Starstone"},"geometry":{"type":"Point","coordinates":[-0.234,30.889]}},
-  {"type":"Feature","properties":{"id":"monster","name":"Monster","kind":"nation-empire","text":"A settled and unexpectedly stable goblin nation ruled by the Goblin King — He Who Sits and Does Not Move. Its border with Taldor remains surprisingly peaceful. In published history this land later becomes Andoran; not here, and not yet.","loreUrl":"https://samarioncodex.neocities.org/monster.html","tags":"Goblin Kingdom, Current Timeline, Goblin King"},"geometry":{"type":"Point","coordinates":[-5.5,33.6]}},
-  {"type":"Feature","properties":{"id":"monster-capital","name":"Monster (city)","kind":"capital","text":"Capital and ruling city of the goblin nation of Monster, seat of the ruler foreign courts call the Goblin King.","loreUrl":"https://samarioncodex.neocities.org/monster.html","tags":"Capital, Monster"},"geometry":{"type":"Point","coordinates":[-4.6,32.7]}},
-  {"type":"Feature","properties":{"id":"taldor","name":"Taldor","kind":"nation-empire","text":"One of the great human powers of the Inner Sea under House Samarion: old, lawful, wealthy, cultured, and armed. Competes with the Kelesh Empire while keeping a deliberately stable border with Monster.","loreUrl":"https://samarioncodex.neocities.org/taldor-kings.html","tags":"Dynasty, Royal Line"},"geometry":{"type":"Point","coordinates":[8.0,32.8]}},
-  {"type":"Feature","properties":{"id":"oppara","name":"Oppara","kind":"capital","text":"Capital of Taldor and seat of House Samarion.","loreUrl":"https://samarioncodex.neocities.org/taldor-kings.html","tags":"Capital, Taldor"},"geometry":{"type":"Point","coordinates":[3.757,33.238]}},
-  {"type":"Feature","properties":{"id":"kelesh-empire","name":"Kelesh Empire","kind":"nation-empire","text":"Eastern imperial power that still includes Qadira in the current campaign era. Anchor for Taldan frontier pressure, Qadiran politics, trade, and wider imperial influence.","loreUrl":"","tags":"Eastern Empire, Qadira"},"geometry":{"type":"Point","coordinates":[11.5,27.2]}},
-  {"type":"Feature","properties":{"id":"kelesh-empire-capital","name":"Katheer","kind":"capital","text":"Seat of the Satrap and the empire's western court. The Padishah Emperor rules from distant Casmaron beyond the map's edge.","loreUrl":"","tags":"Capital, Kelesh Empire"},"geometry":{"type":"Point","coordinates":[5.405,29.696]}},
-  {"type":"Feature","properties":{"id":"osirion","name":"Osirion","kind":"nation-empire","text":"Restored by Grubdy Mudane and Nesira Tefenet, Osirion controls Rahadoum, Thuvia, Katapesh, and territory won from Kelesh. In 277 AR the throne stands empty during the Cold Civil War.","loreUrl":"https://samarioncodex.neocities.org/osirion-mudane-lineage.html","tags":"Mudane Dynasty, Southern Empire, Cold Civil War"},"geometry":{"type":"Point","coordinates":[0.5,24.5]}},
-  {"type":"Feature","properties":{"id":"sothis","name":"Sothis","kind":"capital","text":"Capital of Osirion and the ruling seat of its restored southern empire.","loreUrl":"https://samarioncodex.neocities.org/osirion-mudane-lineage.html","tags":"Capital, Osirion"},"geometry":{"type":"Point","coordinates":[-1.488,27.148]}},
-  {"type":"Feature","properties":{"id":"wyrmrest-sanctuary","name":"Wyrmrest Sanctuary","kind":"sanctuary","text":"A protected forest sanctuary in Rahadoum gifted by Pharaoh Grubdy Mudane to Rawr and Chomper. Entry is forbidden without Rawr's approval; wards keep intruders out and the dinosaurs safely within.","loreUrl":"https://samarioncodex.neocities.org/wyrmrest-sanctuary.html","tags":"Rahadoum, Dinosaur Preserve, Rawr, Chomper"},"geometry":{"type":"Point","coordinates":[-18.5,29.0]}},
-  {"type":"Feature","properties":{"id":"nex","name":"Nex","kind":"nation-empire","text":"A high-magic southern nation facing an Osirion-built border wall intended to cut off its trade and support Geb. The archmage Nex remains active in this era, holding Jalmeray since 253 AR.","loreUrl":"","tags":"Magic, Southern Nation"},"geometry":{"type":"Point","coordinates":[-2.5,18.6]}},
-  {"type":"Feature","properties":{"id":"quantium","name":"Quantium","kind":"capital","text":"Capital of Nex and seat of its arcane government.","loreUrl":"","tags":"Capital, Nex"},"geometry":{"type":"Point","coordinates":[-2.598,19.832]}},
-  {"type":"Feature","properties":{"id":"mana-wastes","name":"Mana Wastes","kind":"nation-empire","text":"The scarred territory between Nex and Geb, shaped by their long war — strange hazards, ruins, and unstable magic.","loreUrl":"","tags":"Arcane Scar, Nex, Geb"},"geometry":{"type":"Point","coordinates":[-5.2,16.2]}},
-  {"type":"Feature","properties":{"id":"geb","name":"Geb","kind":"nation-empire","text":"Southern undead power and counterweight to Nex. Osirion supports Geb, restricting Nexian trade with a border wall.","loreUrl":"","tags":"Undeath, Southern Nation"},"geometry":{"type":"Point","coordinates":[-4.3,14.8]}},
-  {"type":"Feature","properties":{"id":"mechitar","name":"Mechitar","kind":"capital","text":"Capital of Geb and ruling city of the undead kingdom.","loreUrl":"","tags":"Capital, Geb"},"geometry":{"type":"Point","coordinates":[-2.541,14.761]}}
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "isle-of-kortos",
+    "name": "Isle of Kortos",
+    "kind": "nation-empire",
+    "text": "Island home of Absalom and the Starstone. The City at the Center of the World rules the isle; Aroden remains active in this era.",
+    "loreUrl": "https://samarioncodex.neocities.org/heroes-of-absalom.html",
+    "tags": "Absalom, Starstone, Current Timeline"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     0.5,
+     30.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "absalom-capital",
+    "name": "Absalom",
+    "kind": "capital",
+    "text": "Ruling city of the Isle of Kortos and the City at the Center of the World. In this campaign era, Aroden is still active and tied directly into Absalom politics.",
+    "loreUrl": "https://samarioncodex.neocities.org/heroes-of-absalom.html",
+    "tags": "Capital, Isle of Kortos, Starstone"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -0.234,
+     30.889
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "monster",
+    "name": "Monster",
+    "kind": "nation-empire",
+    "text": "A settled and unexpectedly stable goblin nation ruled by the Goblin King \u2014 He Who Sits and Does Not Move. Its border with Taldor remains surprisingly peaceful. In published history this land later becomes Andoran; not here, and not yet.",
+    "loreUrl": "https://samarioncodex.neocities.org/monster.html",
+    "tags": "Goblin Kingdom, Current Timeline, Goblin King"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -5.5,
+     33.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "monster-capital",
+    "name": "Monster (city)",
+    "kind": "capital",
+    "text": "Capital and ruling city of the goblin nation of Monster, seat of the ruler foreign courts call the Goblin King.",
+    "loreUrl": "https://samarioncodex.neocities.org/monster.html",
+    "tags": "Capital, Monster"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -3.0595746605272325,
+     33.76377647420185
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "taldor",
+    "name": "Taldor",
+    "kind": "nation-empire",
+    "text": "One of the great human powers of the Inner Sea under House Samarion: old, lawful, wealthy, cultured, and armed. Competes with the Kelesh Empire while keeping a deliberately stable border with Monster.",
+    "loreUrl": "https://samarioncodex.neocities.org/taldor-kings.html",
+    "tags": "Dynasty, Royal Line"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     8,
+     32.8
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "oppara",
+    "name": "Oppara",
+    "kind": "capital",
+    "text": "Capital of Taldor and seat of House Samarion.",
+    "loreUrl": "https://samarioncodex.neocities.org/taldor-kings.html",
+    "tags": "Capital, Taldor"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     3.757,
+     33.238
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "kelesh-empire",
+    "name": "Kelesh Empire",
+    "kind": "nation-empire",
+    "text": "Eastern imperial power that still includes Qadira in the current campaign era. Anchor for Taldan frontier pressure, Qadiran politics, trade, and wider imperial influence.",
+    "loreUrl": "",
+    "tags": "Eastern Empire, Qadira"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     11.5,
+     27.2
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "kelesh-empire-capital",
+    "name": "Katheer",
+    "kind": "capital",
+    "text": "Seat of the Satrap and the empire's western court. The Padishah Emperor rules from distant Casmaron beyond the map's edge.",
+    "loreUrl": "",
+    "tags": "Capital, Kelesh Empire"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.405,
+     29.696
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "osirion",
+    "name": "Osirion",
+    "kind": "nation-empire",
+    "text": "Restored by Grubdy Mudane and Nesira Tefenet, Osirion controls Rahadoum, Thuvia, Katapesh, and territory won from Kelesh. In 277 AR the throne stands empty during the Cold Civil War.",
+    "loreUrl": "https://samarioncodex.neocities.org/osirion-mudane-lineage.html",
+    "tags": "Mudane Dynasty, Southern Empire, Cold Civil War"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     0.5,
+     24.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "sothis",
+    "name": "Sothis",
+    "kind": "capital",
+    "text": "Capital of Osirion and the ruling seat of its restored southern empire.",
+    "loreUrl": "https://samarioncodex.neocities.org/osirion-mudane-lineage.html",
+    "tags": "Capital, Osirion"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -1.488,
+     27.148
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "wyrmrest-sanctuary",
+    "name": "Wyrmrest Sanctuary",
+    "kind": "sanctuary",
+    "text": "A protected forest sanctuary in Rahadoum gifted by Pharaoh Grubdy Mudane to Rawr and Chomper. Entry is forbidden without Rawr's approval; wards keep intruders out and the dinosaurs safely within.",
+    "loreUrl": "https://samarioncodex.neocities.org/wyrmrest-sanctuary.html",
+    "tags": "Rahadoum, Dinosaur Preserve, Rawr, Chomper"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -18.5,
+     29
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "nex",
+    "name": "Nex",
+    "kind": "nation-empire",
+    "text": "A high-magic southern nation facing an Osirion-built border wall intended to cut off its trade and support Geb. The archmage Nex remains active in this era, holding Jalmeray since 253 AR.",
+    "loreUrl": "",
+    "tags": "Magic, Southern Nation"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -2.5,
+     18.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "quantium",
+    "name": "Quantium",
+    "kind": "capital",
+    "text": "Capital of Nex and seat of its arcane government.",
+    "loreUrl": "",
+    "tags": "Capital, Nex"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -2.598,
+     19.832
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "mana-wastes",
+    "name": "Mana Wastes",
+    "kind": "nation-empire",
+    "text": "The scarred territory between Nex and Geb, shaped by their long war \u2014 strange hazards, ruins, and unstable magic.",
+    "loreUrl": "",
+    "tags": "Arcane Scar, Nex, Geb"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -5.2,
+     16.2
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "geb",
+    "name": "Geb",
+    "kind": "nation-empire",
+    "text": "Southern undead power and counterweight to Nex. Osirion supports Geb, restricting Nexian trade with a border wall.",
+    "loreUrl": "",
+    "tags": "Undeath, Southern Nation"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -4.3,
+     14.8
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "mechitar",
+    "name": "Mechitar",
+    "kind": "capital",
+    "text": "Capital of Geb and ruling city of the undead kingdom.",
+    "loreUrl": "",
+    "tags": "Capital, Geb"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -2.541,
+     14.761
+    ]
+   }
+  }
  ]
 }
