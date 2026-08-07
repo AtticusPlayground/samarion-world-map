@@ -306,6 +306,78 @@
      21.5
     ]
    }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "lirgen",
+    "name": "Lirgen",
+    "kind": "nation-empire",
+    "text": "Young realm of the Saoc Brethren \u2014 astrologer-priests who chart every fate in the stars. In published history, Lirgen drowns beneath the Eye of Abendego at Aroden's death, a storm its stargazers never foresaw. In this world the stars stay kind.",
+    "loreUrl": "",
+    "tags": "Saoc Brethren, Astrologers, Abendego Coast"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -22.2,
+     21.7
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "hyrantam",
+    "name": "Hyrantam",
+    "kind": "capital",
+    "text": "Capital of Lirgen and seat of the Saoc Brethren's star-courts, where the year's fates are read aloud from the observatory terraces.",
+    "loreUrl": "",
+    "tags": "Capital, Lirgen"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -20.64,
+     22.39
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "yamasa",
+    "name": "Yamasa",
+    "kind": "nation-empire",
+    "text": "Clan-held river country south of Lirgen, ruled by its matriarchs and rich in wetland harvests. Published history drowns it with the Eye of Abendego; here its rivers run their own course.",
+    "loreUrl": "",
+    "tags": "Matriarchal Clans, Abendego Coast"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -21.5,
+     19.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "jula",
+    "name": "Jula",
+    "kind": "capital",
+    "text": "Greatest of Yamasa's river-towns and the customary meeting-seat of its clan matriarchs.",
+    "loreUrl": "",
+    "tags": "Capital, Yamasa"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -22.63,
+     20.68
+    ]
+   }
   }
  ]
 }
